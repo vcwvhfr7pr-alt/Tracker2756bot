@@ -17,31 +17,49 @@
 ```
     body {
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-        background: var(--tg-theme-bg-color, #ffffff);
+        background: var(--tg-theme-bg-color, #000000);
         color: var(--tg-theme-text-color, #ffffff);
-        padding: 10px;
-        overflow-x: hidden;
-        touch-action: pan-y;
+        overflow: hidden;
+        height: 100vh;
+        touch-action: pan-x pan-y;
     }
     
-    .container {
-        max-width: 100%;
-        margin: 0 auto;
-        padding-bottom: 20px;
+    .app-container {
+        display: flex;
+        height: 100vh;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+    }
+    
+    .page {
+        min-width: 100vw;
+        height: 100vh;
+        scroll-snap-align: start;
+        overflow-y: auto;
+        padding: 15px;
+        padding-bottom: 80px;
     }
     
     .header {
         text-align: center;
         margin-bottom: 20px;
-        padding: 15px 10px;
-        background: var(--tg-theme-secondary-bg-color, #f4f4f5);
+        padding: 15px;
+        background: var(--tg-theme-secondary-bg-color, #1c1c1e);
         border-radius: 12px;
     }
     
     .header h1 {
-        font-size: 20px;
+        font-size: 22px;
         font-weight: 600;
-        margin-bottom: 12px;
+        margin-bottom: 8px;
+    }
+    
+    .header-subtitle {
+        font-size: 14px;
+        color: var(--tg-theme-hint-color, #8e8e93);
     }
     
     .month-input {
@@ -49,170 +67,188 @@
         gap: 8px;
         justify-content: center;
         flex-wrap: wrap;
+        margin-top: 12px;
     }
     
     .month-input input {
-        padding: 8px 12px;
-        border: 1px solid var(--tg-theme-hint-color, #999);
+        padding: 10px 12px;
+        border: 1px solid var(--tg-theme-hint-color, #3a3a3c);
         border-radius: 8px;
         font-size: 14px;
-        background: var(--tg-theme-secondary-bg-color, #fff);
+        background: var(--tg-theme-secondary-bg-color, #1c1c1e);
         color: var(--tg-theme-text-color, #ffffff);
         flex: 1;
         min-width: 100px;
         max-width: 150px;
     }
     
-    .table-container {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        margin-bottom: 20px;
+    .habit-item {
+        background: var(--tg-theme-secondary-bg-color, #1c1c1e);
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 12px;
     }
     
-    table {
-        width: 100%;
-        min-width: 800px;
-        border-collapse: collapse;
-        font-size: 11px;
-    }
-    
-    th, td {
-        border: 1px solid var(--tg-theme-hint-color, #ccc);
-        padding: 6px 3px;
-        text-align: center;
-    }
-    
-    th {
-        background: var(--tg-theme-button-color, #3390ec);
-        color: var(--tg-theme-button-text-color, #ffffff);
-        font-weight: 600;
-        position: sticky;
-        top: 0;
-        z-index: 10;
+    .habit-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
     }
     
     .habit-name {
-        text-align: left;
-        padding-left: 8px;
-        background: var(--tg-theme-secondary-bg-color, #a8a8a8);
-        color: var(--tg-theme-text-color, #ffffff);
+        font-size: 16px;
         font-weight: 600;
-        min-width: 120px;
-        position: sticky;
-        left: 0;
-        z-index: 5;
+        cursor: pointer;
+        flex: 1;
     }
     
-    .day-cell {
-        width: 28px;
-        height: 32px;
+    .habit-counter {
+        background: var(--tg-theme-button-color, #0088cc);
+        color: var(--tg-theme-button-text-color, #ffffff);
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+        min-width: 50px;
+        text-align: center;
+    }
+    
+    .days-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+    }
+    
+    .day-btn {
+        aspect-ratio: 1;
+        border: 2px solid var(--tg-theme-hint-color, #3a3a3c);
+        border-radius: 12px;
+        background: transparent;
+        color: var(--tg-theme-text-color, #ffffff);
+        font-size: 18px;
+        font-weight: 700;
         cursor: pointer;
         transition: all 0.2s;
-        user-select: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 60px;
+        position: relative;
     }
     
-    .day-cell:active {
+    .day-btn:active {
+        transform: scale(0.92);
+    }
+    
+    .day-btn.checked {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-color: #667eea;
+        color: #ffffff;
+    }
+    
+    .day-btn.checked::after {
+        content: '✓';
+        position: absolute;
+        font-size: 24px;
+    }
+    
+    .sleep-page {
+        padding-top: 80px;
+    }
+    
+    .sleep-day-item {
+        background: var(--tg-theme-secondary-bg-color, #1c1c1e);
+        border-radius: 12px;
+        padding: 15px 20px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    
+    .sleep-day-item:active {
+        transform: scale(0.98);
+    }
+    
+    .sleep-day-label {
+        font-size: 16px;
+        font-weight: 600;
+    }
+    
+    .sleep-hours {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+    
+    .sleep-btn {
+        width: 40px;
+        height: 40px;
+        border: none;
+        border-radius: 50%;
+        background: var(--tg-theme-button-color, #0088cc);
+        color: var(--tg-theme-button-text-color, #ffffff);
+        font-size: 20px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .sleep-btn:active {
+        transform: scale(0.9);
+    }
+    
+    .sleep-value {
+        font-size: 24px;
+        font-weight: 700;
+        min-width: 60px;
+        text-align: center;
+        color: var(--tg-theme-link-color, #0088cc);
+    }
+    
+    .mood-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    .mood-day-item {
+        background: var(--tg-theme-secondary-bg-color, #1c1c1e);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    
+    .mood-day-item:active {
         transform: scale(0.95);
     }
     
-    .day-cell.checked {
-        background: #4ade80;
-        color: #ffffff;
-        font-weight: bold;
+    .mood-day-label {
         font-size: 14px;
-    }
-    
-    .total-cell {
-        background: var(--tg-theme-button-color, #3390ec);
-        color: var(--tg-theme-button-text-color, #ffffff);
-        font-weight: bold;
-        position: sticky;
-        right: 0;
-    }
-    
-    .section-title {
-        font-size: 18px;
         font-weight: 600;
-        margin: 25px 0 12px 0;
-        padding: 10px;
-        background: var(--tg-theme-secondary-bg-color, #f4f4f5);
-        border-radius: 8px;
+        margin-bottom: 12px;
+        color: var(--tg-theme-hint-color, #8e8e93);
     }
     
-    .sleep-tracker {
-        position: relative;
-        height: 200px;
-        background: var(--tg-theme-secondary-bg-color, #f9f9f9);
-        padding: 15px;
-        margin-bottom: 20px;
-        border-radius: 12px;
-        overflow: hidden;
-    }
-    
-    .sleep-grid {
-        position: absolute;
-        top: 15px;
-        left: 60px;
-        right: 15px;
-        bottom: 30px;
-    }
-    
-    .sleep-line {
-        stroke: var(--tg-theme-link-color, #3390ec);
-        stroke-width: 2;
-        fill: none;
-    }
-    
-    .sleep-point {
-        cursor: pointer;
-        transition: r 0.2s;
-    }
-    
-    .sleep-point:active {
-        r: 7;
-    }
-    
-    .sleep-labels {
-        position: absolute;
-        left: 5px;
-        top: 15px;
-        bottom: 30px;
-        width: 50px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        font-size: 10px;
-    }
-    
-    .mood-tracker-container {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    .mood-tracker {
-        min-width: 800px;
-    }
-    
-    .mood-tracker td {
-        height: 45px;
-        font-size: 22px;
-        cursor: pointer;
-    }
-    
-    .mood-tracker .day-cell:active {
-        transform: scale(1.3);
+    .mood-emoji {
+        font-size: 48px;
+        margin-bottom: 8px;
     }
     
     .stats {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        grid-template-columns: repeat(3, 1fr);
         gap: 10px;
         margin-top: 20px;
     }
     
     .stat-card {
-        padding: 15px;
-        background: var(--tg-theme-secondary-bg-color, #f4f4f5);
+        padding: 20px 15px;
+        background: var(--tg-theme-secondary-bg-color, #1c1c1e);
         border-radius: 12px;
         text-align: center;
     }
@@ -220,30 +256,84 @@
     .stat-card .number {
         font-size: 28px;
         font-weight: bold;
-        color: var(--tg-theme-link-color, #3390ec);
+        color: var(--tg-theme-link-color, #0088cc);
+        margin-bottom: 5px;
     }
     
     .stat-card .label {
-        font-size: 12px;
-        color: var(--tg-theme-hint-color, #999);
-        margin-top: 5px;
+        font-size: 11px;
+        color: var(--tg-theme-hint-color, #8e8e93);
+    }
+    
+    .page-indicator {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        z-index: 100;
+        background: var(--tg-theme-secondary-bg-color, rgba(28, 28, 30, 0.8));
+        padding: 10px 20px;
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+    }
+    
+    .page-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--tg-theme-hint-color, #3a3a3c);
+        transition: all 0.3s;
+    }
+    
+    .page-dot.active {
+        background: var(--tg-theme-link-color, #0088cc);
+        width: 24px;
+        border-radius: 4px;
+    }
+    
+    .section-title {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 15px;
+        color: var(--tg-theme-text-color, #ffffff);
+    }
+    
+    .add-habit-btn {
+        width: 100%;
+        padding: 15px;
+        border: 2px dashed var(--tg-theme-hint-color, #3a3a3c);
+        border-radius: 12px;
+        background: transparent;
+        color: var(--tg-theme-hint-color, #8e8e93);
+        font-size: 16px;
+        cursor: pointer;
+        margin-bottom: 12px;
+        transition: all 0.2s;
+    }
+    
+    .add-habit-btn:active {
+        transform: scale(0.98);
+        border-color: var(--tg-theme-link-color, #0088cc);
+        color: var(--tg-theme-link-color, #0088cc);
     }
     
     .button-group {
         display: flex;
         gap: 10px;
-        margin: 20px 0;
+        margin-top: 20px;
     }
     
     .btn {
         flex: 1;
-        padding: 12px;
+        padding: 15px;
         border: none;
-        border-radius: 10px;
-        font-size: 14px;
+        border-radius: 12px;
+        font-size: 15px;
         font-weight: 600;
         cursor: pointer;
-        background: var(--tg-theme-button-color, #3390ec);
+        background: var(--tg-theme-button-color, #0088cc);
         color: var(--tg-theme-button-text-color, #ffffff);
         transition: opacity 0.2s;
     }
@@ -253,136 +343,94 @@
     }
     
     .btn-secondary {
-        background: var(--tg-theme-secondary-bg-color, #e5e5e5);
+        background: var(--tg-theme-secondary-bg-color, #1c1c1e);
         color: var(--tg-theme-text-color, #ffffff);
+    }
+    
+    .scroll-hint {
+        text-align: center;
+        padding: 10px;
+        color: var(--tg-theme-hint-color, #8e8e93);
+        font-size: 12px;
+        margin-top: 10px;
     }
 </style>
 ```
 
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📊 Трекер привычек</h1>
-            <div class="month-input">
-                <input type="text" id="monthInput" placeholder="Месяц" value="Январь">
-                <input type="number" id="yearInput" placeholder="Год" value="2025" min="2020" max="2030">
+    <div class="app-container" id="appContainer">
+        <!-- Страница 1: Привычки -->
+        <div class="page" id="page1">
+            <div class="header">
+                <h1>📊 Трекер привычек</h1>
+                <div class="header-subtitle">Свайпните влево для других разделов →</div>
+                <div class="month-input">
+                    <input type="text" id="monthInput" placeholder="Месяц" value="Январь">
+                    <input type="number" id="yearInput" placeholder="Год" value="2025">
+                </div>
             </div>
-            <div class="month-input" style="margin-top: 10px;">
-                <input type="text" id="chapterInput" placeholder="Название главы" value="Моя цель" style="max-width: 100%;">
-            </div>
-        </div>
 
 ```
-    <div class="section-title">📅 30 дней привычек</div>
-    <div class="table-container">
-        <table id="habitsTable">
-            <thead>
-                <tr>
-                    <th>Привычки</th>
-                    <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>
-                    <th>11</th><th>12</th><th>13</th><th>14</th><th>15</th><th>16</th><th>17</th><th>18</th><th>19</th><th>20</th>
-                    <th>21</th><th>22</th><th>23</th><th>24</th><th>25</th><th>26</th><th>27</th><th>28</th><th>29</th><th>30</th>
-                    <th>Всего</th>
-                </tr>
-            </thead>
-            <tbody id="habitsBody">
-            </tbody>
-        </table>
+        <div class="section-title">Мои привычки</div>
+        <div id="habitsContainer"></div>
+        <button class="add-habit-btn" onclick="addNewHabit()">+ Добавить привычку</button>
     </div>
     
-    <div class="section-title">😴 Трекер сна</div>
-    <div class="sleep-tracker">
-        <div class="sleep-labels">
-            <div>8+ ч</div>
-            <div>7 ч</div>
-            <div>6 ч</div>
-            <div>5 ч</div>
-            <div>4 ч</div>
-            <div>3 ч</div>
+    <!-- Страница 2: Сон -->
+    <div class="page" id="page2">
+        <div class="header">
+            <h1>😴 Трекер сна</h1>
+            <div class="header-subtitle">Нажмите +/- для изменения часов сна</div>
         </div>
-        <svg id="sleepChart" class="sleep-grid" width="100%" height="100%"></svg>
+        
+        <div class="section-title">30 дней сна</div>
+        <div id="sleepContainer"></div>
     </div>
     
-    <div class="section-title">😊 Трекер настроения</div>
-    <div class="mood-tracker-container">
-        <table class="mood-tracker">
-            <thead>
-                <tr>
-                    <th>Дни</th>
-                    <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>
-                    <th>11</th><th>12</th><th>13</th><th>14</th><th>15</th><th>16</th><th>17</th><th>18</th><th>19</th><th>20</th>
-                    <th>21</th><th>22</th><th>23</th><th>24</th><th>25</th><th>26</th><th>27</th><th>28</th><th>29</th><th>30</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="habit-name">Настроение</td>
-                    <td class="day-cell mood-cell" data-day="1">😊</td>
-                    <td class="day-cell mood-cell" data-day="2">😊</td>
-                    <td class="day-cell mood-cell" data-day="3">😊</td>
-                    <td class="day-cell mood-cell" data-day="4">😊</td>
-                    <td class="day-cell mood-cell" data-day="5">😊</td>
-                    <td class="day-cell mood-cell" data-day="6">😊</td>
-                    <td class="day-cell mood-cell" data-day="7">😊</td>
-                    <td class="day-cell mood-cell" data-day="8">😊</td>
-                    <td class="day-cell mood-cell" data-day="9">😊</td>
-                    <td class="day-cell mood-cell" data-day="10">😊</td>
-                    <td class="day-cell mood-cell" data-day="11">😊</td>
-                    <td class="day-cell mood-cell" data-day="12">😊</td>
-                    <td class="day-cell mood-cell" data-day="13">😊</td>
-                    <td class="day-cell mood-cell" data-day="14">😊</td>
-                    <td class="day-cell mood-cell" data-day="15">😊</td>
-                    <td class="day-cell mood-cell" data-day="16">😊</td>
-                    <td class="day-cell mood-cell" data-day="17">😊</td>
-                    <td class="day-cell mood-cell" data-day="18">😊</td>
-                    <td class="day-cell mood-cell" data-day="19">😊</td>
-                    <td class="day-cell mood-cell" data-day="20">😊</td>
-                    <td class="day-cell mood-cell" data-day="21">😊</td>
-                    <td class="day-cell mood-cell" data-day="22">😊</td>
-                    <td class="day-cell mood-cell" data-day="23">😊</td>
-                    <td class="day-cell mood-cell" data-day="24">😊</td>
-                    <td class="day-cell mood-cell" data-day="25">😊</td>
-                    <td class="day-cell mood-cell" data-day="26">😊</td>
-                    <td class="day-cell mood-cell" data-day="27">😊</td>
-                    <td class="day-cell mood-cell" data-day="28">😊</td>
-                    <td class="day-cell mood-cell" data-day="29">😊</td>
-                    <td class="day-cell mood-cell" data-day="30">😊</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    
-    <div class="section-title">📈 Статистика</div>
-    <div class="stats">
-        <div class="stat-card">
-            <div class="number" id="totalChecks">0</div>
-            <div class="label">Отметок</div>
+    <!-- Страница 3: Настроение и Статистика -->
+    <div class="page" id="page3">
+        <div class="header">
+            <h1>😊 Настроение</h1>
+            <div class="header-subtitle">Как прошёл ваш день?</div>
         </div>
-        <div class="stat-card">
-            <div class="number" id="avgSleep">0</div>
-            <div class="label">Средний сон</div>
+        
+        <div class="section-title">30 дней настроения</div>
+        <div class="mood-grid" id="moodContainer"></div>
+        
+        <div class="section-title" style="margin-top: 30px;">📈 Статистика</div>
+        <div class="stats">
+            <div class="stat-card">
+                <div class="number" id="totalChecks">0</div>
+                <div class="label">Отметок</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="avgSleep">0</div>
+                <div class="label">Средний сон</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="completion">0%</div>
+                <div class="label">Выполнено</div>
+            </div>
         </div>
-        <div class="stat-card">
-            <div class="number" id="completion">0%</div>
-            <div class="label">Выполнение</div>
+        
+        <div class="button-group">
+            <button class="btn btn-secondary" onclick="resetData()">🔄 Сбросить</button>
+            <button class="btn" onclick="exportData()">💾 Экспорт</button>
         </div>
-    </div>
-    
-    <div class="button-group">
-        <button class="btn btn-secondary" onclick="resetData()">🔄 Сбросить</button>
-        <button class="btn" onclick="exportData()">💾 Экспорт</button>
     </div>
 </div>
 
+<div class="page-indicator">
+    <div class="page-dot active" data-page="0"></div>
+    <div class="page-dot" data-page="1"></div>
+    <div class="page-dot" data-page="2"></div>
+</div>
+
 <script>
-    // Инициализация Telegram Web App
     let tg = window.Telegram.WebApp;
     tg.expand();
     tg.ready();
-    
-    // Применяем тему Telegram
-    document.body.style.backgroundColor = tg.backgroundColor || '#ffffff';
     
     const defaultHabits = [
         '🚫 Без кофе',
@@ -391,12 +439,11 @@
         '🥗 Правильное питание',
         '📚 Изучение языка',
         '🙏 Молитва',
-        '🧘 Поза ЗОЖ',
-        '✨ Полезная привычка',
-        '📱 Экранное время -5',
+        '🧘 Медитация',
         '📝 Ведение дневника'
     ];
     
+    const moods = ['😊', '😐', '😢', '😴', '😎', '🤔', '😤', '🥳', '😇', '🤗'];
     const storageKey = `habit_tracker_${tg.initDataUnsafe?.user?.id || 'default'}`;
     
     function loadData() {
@@ -410,16 +457,8 @@
     }
     
     function saveData() {
-        const data = {
-            habits,
-            habitData,
-            sleepData,
-            moodData
-        };
+        const data = { habits, habitData, sleepData, moodData };
         localStorage.setItem(storageKey, JSON.stringify(data));
-        
-        // Показываем уведомление о сохранении
-        tg.showAlert('✅ Данные сохранены!');
     }
     
     const savedData = loadData();
@@ -428,159 +467,180 @@
     const sleepData = savedData.sleepData;
     const moodData = savedData.moodData;
     
-    const moods = ['😊', '😐', '😢', '😴', '😎', '🤔', '😤', '🥳', '😇', '🤗'];
-    
     function initHabits() {
-        const tbody = document.getElementById('habitsBody');
-        tbody.innerHTML = '';
+        const container = document.getElementById('habitsContainer');
+        container.innerHTML = '';
         
         habits.forEach((habit, habitIndex) => {
-            const row = document.createElement('tr');
+            const habitItem = document.createElement('div');
+            habitItem.className = 'habit-item';
             
-            const nameCell = document.createElement('td');
-            nameCell.className = 'habit-name';
-            nameCell.textContent = habit;
-            nameCell.addEventListener('click', function() {
-                const newName = prompt('Введите новое название привычки:', habit);
+            const header = document.createElement('div');
+            header.className = 'habit-header';
+            
+            const name = document.createElement('div');
+            name.className = 'habit-name';
+            name.textContent = habit;
+            name.onclick = () => {
+                const newName = prompt('Введите новое название:', habit);
                 if (newName && newName.trim()) {
                     habits[habitIndex] = newName.trim();
-                    this.textContent = newName.trim();
                     saveData();
+                    initHabits();
                 }
-            });
-            row.appendChild(nameCell);
+            };
+            
+            const counter = document.createElement('div');
+            counter.className = 'habit-counter';
+            counter.id = `counter-${habitIndex}`;
+            
+            header.appendChild(name);
+            header.appendChild(counter);
+            
+            const grid = document.createElement('div');
+            grid.className = 'days-grid';
             
             for (let day = 1; day <= 30; day++) {
-                const cell = document.createElement('td');
-                cell.className = 'day-cell';
+                const btn = document.createElement('button');
+                btn.className = 'day-btn';
+                btn.textContent = day;
+                
                 const key = `${habitIndex}-${day}`;
                 if (habitData[key]) {
-                    cell.textContent = '✓';
-                    cell.classList.add('checked');
+                    btn.classList.add('checked');
                 }
-                cell.addEventListener('click', function() {
-                    this.classList.toggle('checked');
-                    if (this.classList.contains('checked')) {
-                        this.textContent = '✓';
+                
+                btn.onclick = () => {
+                    btn.classList.toggle('checked');
+                    if (btn.classList.contains('checked')) {
                         habitData[key] = true;
                         tg.HapticFeedback.impactOccurred('light');
                     } else {
-                        this.textContent = '';
                         delete habitData[key];
                     }
                     saveData();
-                    updateTotals();
+                    updateCounters();
                     updateStats();
-                });
-                row.appendChild(cell);
+                };
+                
+                grid.appendChild(btn);
             }
             
-            const totalCell = document.createElement('td');
-            totalCell.className = 'total-cell';
-            totalCell.id = `total-${habitIndex}`;
-            row.appendChild(totalCell);
-            
-            tbody.appendChild(row);
+            habitItem.appendChild(header);
+            habitItem.appendChild(grid);
+            container.appendChild(habitItem);
         });
         
-        updateTotals();
+        updateCounters();
     }
     
-    function updateTotals() {
+    function updateCounters() {
         habits.forEach((_, habitIndex) => {
             let total = 0;
             for (let day = 1; day <= 30; day++) {
                 if (habitData[`${habitIndex}-${day}`]) total++;
             }
-            const totalCell = document.getElementById(`total-${habitIndex}`);
-            if (totalCell) totalCell.textContent = total;
+            const counter = document.getElementById(`counter-${habitIndex}`);
+            if (counter) counter.textContent = `${total}/30`;
         });
     }
     
-    function initSleepTracker() {
-        const svg = document.getElementById('sleepChart');
-        const width = svg.clientWidth;
-        const height = svg.clientHeight;
+    function initSleep() {
+        const container = document.getElementById('sleepContainer');
+        container.innerHTML = '';
         
-        svg.innerHTML = '';
-        
-        for (let i = 0; i <= 5; i++) {
-            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            const y = (height / 5) * i;
-            line.setAttribute('x1', '0');
-            line.setAttribute('y1', y);
-            line.setAttribute('x2', width);
-            line.setAttribute('y2', y);
-            line.setAttribute('stroke', tg.themeParams.hint_color || '#ddd');
-            svg.appendChild(line);
-        }
-        
-        for (let i = 0; i <= 30; i++) {
-            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            const x = (width / 30) * i;
-            line.setAttribute('x1', x);
-            line.setAttribute('y1', '0');
-            line.setAttribute('x2', x);
-            line.setAttribute('y2', height);
-            line.setAttribute('stroke', tg.themeParams.hint_color || '#ddd');
-            svg.appendChild(line);
-        }
-        
-        const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
-        polyline.setAttribute('class', 'sleep-line');
-        
-        let points = '';
         for (let day = 1; day <= 30; day++) {
-            const x = ((day - 0.5) / 30) * width;
-            const hours = sleepData[day] || 7;
-            const y = height - ((hours - 3) / 5) * height;
-            points += `${x},${y} `;
+            const item = document.createElement('div');
+            item.className = 'sleep-day-item';
             
-            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            circle.setAttribute('class', 'sleep-point');
-            circle.setAttribute('cx', x);
-            circle.setAttribute('cy', y);
-            circle.setAttribute('r', '4');
-            circle.setAttribute('fill', tg.themeParams.link_color || '#3390ec');
-            circle.setAttribute('data-day', day);
+            const label = document.createElement('div');
+            label.className = 'sleep-day-label';
+            label.textContent = `День ${day}`;
             
-            circle.addEventListener('click', function() {
-                const day = parseInt(this.getAttribute('data-day'));
-                const newHours = prompt(`День ${day}: введите часы сна (3-8):`, sleepData[day] || 7);
-                if (newHours && !isNaN(newHours)) {
-                    const hours = Math.max(3, Math.min(8, parseFloat(newHours)));
-                    sleepData[day] = hours;
-                    tg.HapticFeedback.impactOccurred('medium');
+            const hours = document.createElement('div');
+            hours.className = 'sleep-hours';
+            
+            const minusBtn = document.createElement('button');
+            minusBtn.className = 'sleep-btn';
+            minusBtn.textContent = '−';
+            minusBtn.onclick = () => {
+                const current = sleepData[day] || 7;
+                if (current > 0) {
+                    sleepData[day] = Math.max(0, current - 0.5);
+                    tg.HapticFeedback.impactOccurred('light');
                     saveData();
-                    initSleepTracker();
+                    updateSleepValue(day);
                     updateStats();
                 }
-            });
+            };
             
-            svg.appendChild(circle);
+            const value = document.createElement('div');
+            value.className = 'sleep-value';
+            value.id = `sleep-${day}`;
+            value.textContent = `${sleepData[day] || 7}ч`;
+            
+            const plusBtn = document.createElement('button');
+            plusBtn.className = 'sleep-btn';
+            plusBtn.textContent = '+';
+            plusBtn.onclick = () => {
+                const current = sleepData[day] || 7;
+                if (current < 12) {
+                    sleepData[day] = Math.min(12, current + 0.5);
+                    tg.HapticFeedback.impactOccurred('light');
+                    saveData();
+                    updateSleepValue(day);
+                    updateStats();
+                }
+            };
+            
+            hours.appendChild(minusBtn);
+            hours.appendChild(value);
+            hours.appendChild(plusBtn);
+            
+            item.appendChild(label);
+            item.appendChild(hours);
+            container.appendChild(item);
         }
-        
-        polyline.setAttribute('points', points.trim());
-        svg.insertBefore(polyline, svg.firstChild);
     }
     
-    function initMoodTracker() {
-        document.querySelectorAll('.mood-cell').forEach(cell => {
-            const day = parseInt(cell.getAttribute('data-day'));
-            if (moodData[day] !== undefined) {
-                cell.textContent = moods[moodData[day]];
-            }
+    function updateSleepValue(day) {
+        const value = document.getElementById(`sleep-${day}`);
+        if (value) {
+            value.textContent = `${sleepData[day] || 7}ч`;
+        }
+    }
+    
+    function initMood() {
+        const container = document.getElementById('moodContainer');
+        container.innerHTML = '';
+        
+        for (let day = 1; day <= 30; day++) {
+            const item = document.createElement('div');
+            item.className = 'mood-day-item';
             
-            cell.addEventListener('click', function() {
-                const day = parseInt(this.getAttribute('data-day'));
-                const currentIndex = moodData[day] !== undefined ? moodData[day] : 0;
-                const newIndex = (currentIndex + 1) % moods.length;
-                this.textContent = moods[newIndex];
-                moodData[day] = newIndex;
+            const label = document.createElement('div');
+            label.className = 'mood-day-label';
+            label.textContent = `День ${day}`;
+            
+            const emoji = document.createElement('div');
+            emoji.className = 'mood-emoji';
+            emoji.id = `mood-${day}`;
+            const currentMood = moodData[day] !== undefined ? moodData[day] : 0;
+            emoji.textContent = moods[currentMood];
+            
+            item.onclick = () => {
+                const current = moodData[day] !== undefined ? moodData[day] : 0;
+                const next = (current + 1) % moods.length;
+                moodData[day] = next;
+                emoji.textContent = moods[next];
                 tg.HapticFeedback.impactOccurred('light');
                 saveData();
-            });
-        });
+            };
+            
+            item.appendChild(label);
+            item.appendChild(emoji);
+            container.appendChild(item);
+        }
     }
     
     function updateStats() {
@@ -590,12 +650,22 @@
         const sleepValues = Object.values(sleepData);
         const avgSleep = sleepValues.length > 0 
             ? (sleepValues.reduce((a, b) => a + b, 0) / sleepValues.length).toFixed(1)
-            : 0;
-        document.getElementById('avgSleep').textContent = avgSleep;
+            : 7;
+        document.getElementById('avgSleep').textContent = avgSleep + 'ч';
         
         const totalPossible = habits.length * 30;
         const completion = totalPossible > 0 ? Math.round((totalChecks / totalPossible) * 100) : 0;
         document.getElementById('completion').textContent = completion + '%';
+    }
+    
+    function addNewHabit() {
+        const name = prompt('Введите название новой привычки:');
+        if (name && name.trim()) {
+            habits.push(name.trim());
+            saveData();
+            initHabits();
+            tg.HapticFeedback.notificationOccurred('success');
+        }
     }
     
     function resetData() {
@@ -617,22 +687,43 @@
         tg.showAlert('📥 Данные экспортированы!');
     }
     
-    // Инициализация
-    initHabits();
-    initSleepTracker();
-    initMoodTracker();
-    updateStats();
+    // Индикатор страниц
+    const container = document.getElementById('appContainer');
+    const dots = document.querySelectorAll('.page-dot');
     
-    // Обработка изменения размера окна
-    window.addEventListener('resize', () => {
-        initSleepTracker();
+    container.addEventListener('scroll', () => {
+        const scrollLeft = container.scrollLeft;
+        const pageWidth = container.clientWidth;
+        const currentPage = Math.round(scrollLeft / pageWidth);
+        
+        dots.forEach((dot, index) => {
+            if (index === currentPage) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
     });
     
-    // Уведомление пользователя
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            container.scrollTo({
+                left: index * container.clientWidth,
+                behavior: 'smooth'
+            });
+        });
+    });
+    
+    // Инициализация
+    initHabits();
+    initSleep();
+    initMood();
+    updateStats();
+    
     setTimeout(() => {
         tg.showPopup({
             title: '👋 Добро пожаловать!',
-            message: 'Нажимайте на ячейки для отметки выполненных дней. Все данные сохраняются автоматически.',
+            message: 'Свайпайте влево-вправо для переключения между разделами. Нажимайте на большие кнопки для отметки дней!',
             buttons: [{type: 'ok'}]
         });
     }, 1000);
